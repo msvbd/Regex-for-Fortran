@@ -364,7 +364,7 @@ return:
 ```
 
 ## Regex options
-There are few option for regex which you can use.
+There are few options for regex.
 It is good described on [regex.h](http://man7.org/linux/man-pages/man3/regex.3.html)
 * `x` -> REG_EXTENDED
 * `i` -> REG_ICASE
