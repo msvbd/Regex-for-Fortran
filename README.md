@@ -16,8 +16,8 @@ Functional & Object oriented regex wrapper for Fortran.
 	* [`match_all` example](#match_all-example)
 	* [`re_replace` example](#re_replace-example)
 	* [`re_replace_all` example](#re_replace_all-example)
-	* [`operator (==)` example](#operator-==-example)
-	* [`assignment (=)` example](#assignment-=-example)
+	* [`operator (==)` example](#operator==example)
+	* [`assignment (=)` example](#assignment=example)
 * [Regex options](#regex-options)
 * [References](#references)
 
