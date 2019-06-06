@@ -139,6 +139,20 @@ implicit none
   write(*,*) match_scalar == match(string, "[skdj]+","xni")
   write(*,*) re == re_posix("[skdj]+","xni")
   
+  write(*,*) "---------------------------------------------"
+  
+  write(*,*) "regex match group example:"
+  
+  match_scalar = match("asdf@jklp.test", "([a-zA-Z]+)@(([a-zA-Z]+).([a-zA-Z]+))","xn")
+  write(*,*) match_scalar
+  write(*,*) "group: 1",match_scalar%group(1)
+  write(*,*) "group: 2",match_scalar%group(2)
+  write(*,*) "group: 3",match_scalar%group(3)
+  write(*,*) "group: 4",match_scalar%group(4)
+  write(*,*) "group: 5",match_scalar%group(5)
+  write(*,*) "group: 6",match_scalar%group(6)
+  write(*,*) "group: 7",match_scalar%group(7)
+  
   
   
 end program

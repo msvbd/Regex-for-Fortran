@@ -5,6 +5,8 @@ implicit none
 
 private
 
+integer(4),parameter :: n_groups = 50
+
 ! regex.h typs/stuctures   >>>>
 type regex_t
     INTEGER(1),contiguous,pointer :: buffer(:) => null()
@@ -19,10 +21,21 @@ type, bind(C) :: regmatch_t
 end type
 ! regex.h typs/stuctures   <<<<
 
+type match_group
+    integer(4) :: start_pos
+    integer(4) :: end_pos
+    integer(4) :: length
+    character(len=:),allocatable :: m_string
+  contains
+    procedure, private :: write => write_match_group
+    generic :: write(formatted) => write
+end type
+
 type re_match
     character(len=:),allocatable :: m_string
     integer(4) :: start_pos
     integer(4) :: end_pos
+    type(match_group) :: group(n_groups)
     integer(4) :: length
   contains
     procedure,private :: no_match => re_match_no_match
@@ -189,6 +202,18 @@ contains
 !========================================================================
 subroutine write_re_match(rem, unit, iotype, v_list, iostat, iomsg)
     class(re_match), intent(in) :: rem
+    integer, intent(in) :: unit
+    character(len=*), intent(in) :: iotype
+    integer, intent(in) :: v_list(:)
+    integer, intent(out) :: iostat
+    character(len=*), intent(inout) :: iomsg
+    
+    write(unit, '(*(g0))', iostat=iostat) "{(",rem%start_pos,",",rem%end_pos,") ", &
+        rem%length,' - "',rem%m_string,'"}'
+end subroutine
+!========================================================================
+subroutine write_match_group(rem, unit, iotype, v_list, iostat, iomsg)
+    class(match_group), intent(in) :: rem
     integer, intent(in) :: unit
     character(len=*), intent(in) :: iotype
     integer, intent(in) :: v_list(:)
@@ -527,12 +552,12 @@ type(re_match) function posix_match(this,str) result(res)
     character(len=*),intent(in) :: str
     
     integer(c_int) ret
-    type(regmatch_t) pmatch(0:0)
+    type(regmatch_t) pmatch(0:n_groups-1)
     character(kind=c_char,len=115) :: errorbuf = ""
     character(kind=c_char,len=1) :: tmp
     integer(c_size_t) :: regerror
-    integer(c_size_t) :: nmch = 1
-    integer(c_int) :: i
+    integer(c_size_t) :: nmch = int(n_groups,kind=c_size_t)
+    integer(4) :: i
     
     call res%no_match()
     
@@ -548,9 +573,16 @@ type(re_match) function posix_match(this,str) result(res)
         res%end_pos = pmatch(0)%rm_eo
         res%m_string = str(res%start_pos:res%end_pos)
         res%length = pmatch(0)%rm_eo - pmatch(0)%rm_so
+        
+        do i = 1, n_groups
+            res%group(i)%start_pos = pmatch(i-1)%rm_so+1
+            res%group(i)%end_pos = pmatch(i-1)%rm_eo
+            res%group(i)%m_string = str(res%group(i)%start_pos:res%group(i)%end_pos)
+            res%group(i)%length = pmatch(i-1)%rm_eo - pmatch(i-1)%rm_so
+        enddo
     else if(ret > 1) then
         regerror = C_regerror(ret, this%rgxt%rgx, errorbuf, c_sizeof(tmp))
-        write(*,'(*(g0))') "regex.h > regexec(): error #",i,": ",trim(errorbuf)
+        write(*,'(*(g0))') "regex.h > regexec(): error #",ret,": ",trim(errorbuf)
         res%start_pos = -1;
         res%end_pos = -1;
         res%length = 0;

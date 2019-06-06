@@ -64,6 +64,14 @@ Types:
 		* `start_pos` - start positiont of mached substring in parent string
 		* `end_pos` - end positiont of mached substring in parent string
 		* `length` - length of mached substring
+		* `group` - array(50) of `match_group` types
+		
+* `match_group` - Group type
+	* Variables:
+		* `m_string` - mached substring
+		* `start_pos` - start positiont of mached substring in parent string
+		* `end_pos` - end positiont of mached substring in parent string
+		* `length` - length of mached substring
 		
 _Note: Both types have overloaded `write(formatted)` and `operator(==)`_
 
@@ -205,6 +213,36 @@ return:
  {(2,3) 2 - "sd"}
  {(2,3) 2 - "sd"}
  {(2,3) 2 - "sd"}
+```
+### `match_group` example
+Group(1) is equal to full match. Each other group is match of one of any pattern between brackets `(..)`.
+In example is group(1) match of the pattern: `([a-zA-Z]+)@([a-zA-Z]+).([a-zA-Z]+)`; 
+group(2) match of the pattern :`[a-zA-Z]+`; group(3) match of the pattern :`(([a-zA-Z]+).([a-zA-Z]+))`; 
+group(4) and group(5) are matches of the pattern: `[a-zA-Z]+` (subpatterns of previous pattern).
+```
+  type(re_match) :: match_scalar
+  
+  match_scalar = match("asdf@jklp.test", "([a-zA-Z]+)@(([a-zA-Z]+).([a-zA-Z]+))","xn")
+  
+  write(*,*) match_scalar
+  write(*,*) "group: 1",match_scalar%group(1)
+  write(*,*) "group: 2",match_scalar%group(2)
+  write(*,*) "group: 3",match_scalar%group(3)
+  write(*,*) "group: 4",match_scalar%group(4)
+  write(*,*) "group: 5",match_scalar%group(5)
+  write(*,*) "group: 6",match_scalar%group(6)
+  write(*,*) "group: 7",match_scalar%group(7)
+```
+return:
+```
+ {(1,14) 14 - "asdf@jklp.test"}
+ group: 1 {(1,14) 14 - "asdf@jklp.test"}
+ group: 2 {(1,4) 4 - "asdf"}
+ group: 3 {(6,14) 9 - "jklp.test"}
+ group: 4 {(6,9) 4 - "jklp"}
+ group: 5 {(11,14) 4 - "test"}
+ group: 6 {(0,-1) 0 - ""}
+ group: 7 {(0,-1) 0 - ""}
 ```
 ### `match_N` example
 `match_N` is same as `match` but returns array of `re_match` types with size `N`.
