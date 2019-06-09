@@ -1,6 +1,6 @@
 # Fortran compiler
 #FC = ifort
-FC = gfortran
+FC = gfortran-8
 # Fortran compiler flags
 FF = -O3 -std=f2008
 

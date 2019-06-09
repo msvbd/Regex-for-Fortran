@@ -56,6 +56,7 @@ Types:
 		* `match_all` - match all occurrences - Return array of `re_match` types
 		* `replace` - replace first occurrence - Return character
 		* `replace_all` - replace all occurrences  - Return character
+		* `test_match` - Return `.true.` if regex is matched and `.false.` if not
 		* `clean` - deallocate
 		
 * `re_match` - Match type
@@ -82,6 +83,7 @@ stand-alone methods:
 * `match` - match first occurrence  - Return `re_match` type
 * `match_N` - match first N occurrences - Return array of `re_match` types
 * `match_all` - match all occurrences - Return array of `re_match` types
+* `test_match` - Return `.true.` if regex is matched and `.false.` if not
 * `replace` - replace first occurrence found by `index` intrinsic - !!! It doesn't use regex !!! - Return character
 * `replace_all` - replace all occurrences found by `index` intrinsic - !!! It doesn't use regex !!! - Return character
 * `re_replace` - replace first occurrence found by `match` - Return character

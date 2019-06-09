@@ -53,6 +53,7 @@ type re_posix
     character(kind=c_char,len=:),allocatable :: patt
   contains
     procedure :: clean => re_posix_clean
+    procedure :: test_match => test_posix_match
     procedure :: match => posix_match
     procedure :: match_N => posix_match_N
     procedure :: match_all => posix_match_all
@@ -173,6 +174,10 @@ interface match
     procedure :: posix_match, alone_match
 end interface
 
+interface test_match
+    procedure :: test_posix_match, test_alone_match
+end interface
+
 interface match_N
     procedure :: posix_match_N, alone_match_N
 end interface
@@ -193,7 +198,7 @@ end interface
 public :: re_posix, re_match, operator(==), assignment(=)
 
 ! this module functions
-public :: match, match_N, match_all, re_replace, re_replace_all
+public :: match, test_match, match_N, match_all, re_replace, re_replace_all
 
 ! scan_verify_smoc.f90 funstions
 public :: scan_all, verify_all, index_all, replace, replace_all
@@ -365,6 +370,23 @@ function posix_match_N(this,str,n) result(res)
             call res(i)%no_match()
         end if
     end do
+    
+end function
+!=======================================================================
+logical function test_alone_match(str, patt, opt) result(res)
+    character(len=*),intent(in) :: str
+    character(len=*),intent(in) :: patt
+    character(len=*),optional,intent(in) :: opt
+    
+    type(re_match) :: this_match
+
+    this_match = match(str, patt, opt)
+    
+    if(this_match%length == 0) then
+        res = .false.
+    else
+        res = .true.
+    endif
     
 end function
 !=======================================================================
@@ -589,6 +611,22 @@ type(re_match) function posix_match(this,str) result(res)
     endif
     
     !write(*,*) res%start_pos, res%end_pos, res%length, res%m_string
+    
+end function
+!=======================================================================
+logical function test_posix_match(this,str) result(res)
+    class(re_posix),intent(in) :: this
+    character(len=*),intent(in) :: str
+    
+    type(re_match) :: this_match
+
+    this_match = this%match(str)
+    
+    if(this_match%length == 0) then
+        res = .false.
+    else
+        res = .true.
+    endif
     
 end function
 !=======================================================================
