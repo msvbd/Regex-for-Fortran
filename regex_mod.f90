@@ -39,6 +39,7 @@ type re_match
     integer(4) :: length
   contains
     procedure,private :: no_match => re_match_no_match
+    procedure,private :: add_offset => re_match_add_offset
     
     procedure, private :: write => write_re_match
     generic :: write(formatted) => write
@@ -298,11 +299,15 @@ function posix_match_all(this,str) result(res)
         i = i + 1
         if(i > size(res)) call addsize_re_match_arr(res,n)
         res(i) = this%match(str(start:))
-        start = start + res(i)%end_pos
+        call res(i)%add_offset(str,start-1)
+        start = res(i)%end_pos+1
+        write(*,*) i,res(i)
         if(start > len(str) .or. res(i)%length == 0) exit
     end do
     
-    call resize_re_match_arr(res, i-1)
+    if(res(i)%length == 0) i = i - 1 
+    
+    call resize_re_match_arr(res, i)
     
     contains
     !-------------------------------------------------------------------
@@ -365,7 +370,8 @@ function posix_match_N(this,str,n) result(res)
     do i = 1,n
         if(start <= len(str)) then
             res(i) = this%match(str(start:))
-            start = start + res(i)%end_pos
+            call res(i)%add_offset(str,start-1)
+            start = res(i)%end_pos+1
         else
             call res(i)%no_match()
         end if
@@ -580,7 +586,7 @@ type(re_match) function posix_match(this,str) result(res)
     integer(c_size_t) :: regerror
     integer(c_size_t) :: nmch = int(n_groups,kind=c_size_t)
     integer(4) :: i
-    
+   
     call res%no_match()
     
     if(.not. this%compiled) then
@@ -613,6 +619,25 @@ type(re_match) function posix_match(this,str) result(res)
     !write(*,*) res%start_pos, res%end_pos, res%length, res%m_string
     
 end function
+!=======================================================================
+subroutine re_match_add_offset(this,str,offst)
+    class(re_match),intent(inout) :: this
+    integer(4),intent(in) :: offst
+    character(len=*),intent(in) :: str
+    integer(4) i
+    
+    this%start_pos = this%start_pos + offst
+    this%end_pos = this%end_pos + offst
+    this%m_string = str(this%start_pos:this%end_pos)
+        
+    do i = 1, n_groups
+        if(this%group(i)%length == 0) exit
+        this%group(i)%start_pos = this%group(i)%start_pos + offst
+        this%group(i)%end_pos = this%group(i)%end_pos + offst
+        this%group(i)%m_string = str(this%group(i)%start_pos:this%group(i)%end_pos)
+    enddo
+        
+end subroutine
 !=======================================================================
 logical function test_posix_match(this,str) result(res)
     class(re_posix),intent(in) :: this
