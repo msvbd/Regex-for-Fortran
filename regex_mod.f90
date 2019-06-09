@@ -301,7 +301,6 @@ function posix_match_all(this,str) result(res)
         res(i) = this%match(str(start:))
         call res(i)%add_offset(str,start-1)
         start = res(i)%end_pos+1
-        write(*,*) i,res(i)
         if(start > len(str) .or. res(i)%length == 0) exit
     end do
     
