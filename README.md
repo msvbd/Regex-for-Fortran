@@ -1,6 +1,6 @@
 ## Regex for Fortran
 
-Functional & Object oriented regex wrapper for Fortran. 
+Functional & Object-oriented regex wrapper for Fortran. 
 
 * [Getting started](#getting-started)
 * [Why this module?](#why-this-module)
@@ -22,7 +22,7 @@ Functional & Object oriented regex wrapper for Fortran.
 * [References](#references)
 
 ## Getting started
-You need regex.h library.
+You should have regex.h library.
 
 Installation:
 ```
@@ -37,65 +37,65 @@ Don't forget to compile with: `-lregex -Lpath/to/lib -Ipath/to/include`
 ## Why this module?
 
 Module contains extension for intrinsic functions (`scan_all`, `verify_all`,`index_all`) and 
-clasical regex functions (`match`, `match_all`, `replace`, `replace_all`, ...).
-And user friendly framework based on C interoperability with 
+standard regex functions (`match`, `match_all`, `replace`, `replace_all`, ...).
+And user-friendly framework based on C interoperability with 
 [regex.h](http://man7.org/linux/man-pages/man3/regex.3.html) library wraps all of them.
-The library support [POSIX regular expresion](https://en.wikipedia.org/wiki/Regular_expression#POSIX_basic_and_extended).
+The library supports [POSIX regular expression](https://en.wikipedia.org/wiki/Regular_expression#POSIX_basic_and_extended).
 
 ## What's included?
 
 Types:
 * `re_posix` - Regex type
 	* Variables:
-		* `compiled` - logical variable equal `true` if `patt` is compiled
-		* `opts` - character contains options
-		* `patt` - character contains regex patter
+		* `compiled` - logical - Equal `true` if `patt` is compiled.
+		* `opts` - character - Contains options.
+		* `patt` - character - Contains regex pattern.
 	* Methods:
-		* `match` - match first occurrence - Return `re_match` type
-		* `match_N` - match first N occurrences - Return array of `re_match` types
-		* `match_all` - match all occurrences - Return array of `re_match` types
-		* `replace` - replace first occurrence - Return character
-		* `replace_all` - replace all occurrences  - Return character
-		* `test_match` - Return `.true.` if regex is matched and `.false.` if not
+		* `match` - match the first occurrence - Return `re_match` type.
+		* `match_N` - match first N occurrences - Return an array of `re_match` types.
+		* `match_all` - match all occurrences - Return array of `re_match` types.
+		* `replace` - replace the first occurrence - Return character.
+		* `replace_all` - replace all occurrences  - Return character.
+		* `test_match` - Return `.true.` if regex is matched and `.false.` if not.
 		* `clean` - deallocate
 		
 * `re_match` - Match type
 	* Variables:
-		* `m_string` - mached substring
-		* `start_pos` - start positiont of mached substring in parent string
-		* `end_pos` - end positiont of mached substring in parent string
-		* `length` - length of mached substring
-		* `group` - array(50) of `match_group` types
+		* `m_string` - A matched substring.
+		* `start_pos` - The start position of the matched substring in the parent string.
+		* `end_pos` - The end position of the matched substring in the parent string.
+		* `length` - Length of the matched substring.
+		* `group` - array(50) of `match_group` types.
 		
 * `match_group` - Group type
 	* Variables:
-		* `m_string` - mached substring
-		* `start_pos` - start positiont of mached substring in parent string
-		* `end_pos` - end positiont of mached substring in parent string
-		* `length` - length of mached substring
+		* `m_string` - A matched substring.
+		* `start_pos` - The start positiont of matched substring in the parent string.
+		* `end_pos` - The end positiont of matched substring in the parent string.
+		* `length` - Length of matched substring.
 		
 _Note: Both types have overloaded `write(formatted)` and `operator(==)`_
 
 stand-alone methods:
-* `scan_all` - extended intrinsic function `scan` - Return integer array
-* `verify_all` - extended intrinsic function `verify` - Return integer array
-* `index_all` - extended intrinsic function `index` - Return integer array
-* `match` - match first occurrence  - Return `re_match` type
-* `match_N` - match first N occurrences - Return array of `re_match` types
-* `match_all` - match all occurrences - Return array of `re_match` types
-* `test_match` - Return `.true.` if regex is matched and `.false.` if not
-* `replace` - replace first occurrence found by `index` intrinsic - !!! It doesn't use regex !!! - Return character
-* `replace_all` - replace all occurrences found by `index` intrinsic - !!! It doesn't use regex !!! - Return character
-* `re_replace` - replace first occurrence found by `match` - Return character
-* `re_replace_all` - replace all occurrences found by `match` - Return character
+* `scan_all` - extended intrinsic function `scan` - Returns array of integers.
+* `verify_all` - extended intrinsic function `verify` - Returns array of integers.
+* `index_all` - extended intrinsic function `index` - Returns array of integers.
+* `match` - match the first occurrence - Returns `re_match` type.
+* `match_N` - match the first N occurrences - Returns array of `re_match` types.
+* `match_all` - match all occurrences - Returns array of `re_match` types.
+* `test_match` - Return `.true.` if regex is matched and `.false.` if not.
+* `replace` - replace the first occurrence found by `index` intrinsic - !!! It doesn't use regex !!! - Returns character.
+* `replace_all` - replace all occurrences found by `index` intrinsic - !!! It doesn't use regex !!! - Returns character.
+* `re_replace` - replace the first occurrence found by `match` - Returns character.
+* `re_replace_all` - replace all occurrences found by `match` - Returns character.
 
 ## Example usage
 You can found examples in `regex_test.f90`.
 _Note: Sorry for silly examples. I have it on the list._
   
 ### `scan_all` example
-Intrinsic `scan` found first occurrence one of the character ("a" or "j") in `string`. 
-While `scan_all` return integer array of all occurrences. 
+The intrinsic `scan` found the first occurrence one of the character ("a" or "j") in the `string`. 
+While `scan_all` returns an returns array of all occurrences. 
 ```
   string = "asdf ghjkl asdf ghjkl"
   write(*,*) scan(string,"aj")
@@ -111,9 +111,9 @@ return:
  a      j   a      j  
 ```
 ### `verify_all` example
-Intrinsic `verify` found position of first character in `string` which is not
- one of the character (no "a", nor "d", nor "h", nor "j", nor "k"). 
-While `verify_all` return integer array of all "non-occurrences". 
+The intrinsic `verify` found position of the first character in the `string` which is not
+ one of those characters (no "a", nor "d", nor "h", nor "j", nor "k"). 
+While `verify_all` returns an array of integers of all "non-occurrences". 
 ```
   string = "asdf ghjkl asdf ghjkl"
   write(*,*) verify(string,"adhjk")
@@ -129,8 +129,8 @@ return:
   s f g   l  s f g
 ```
 ### `index_all` example
-Intrinsic `index` found first occurrence of substring ("f g") in `string`. 
-While `index_all` return integer array of all occurrences. 
+The intrinsic `index` found the first occurrence of a substring ("f g") in the `string`. 
+While `index_all` returns an array of integers of all occurrences. 
 ```
   string = "asdf ghjkl asdf ghjkl"
   write(*,*) index(string,"f g")
@@ -146,7 +146,7 @@ return:
     f          f    
 ```
 ### `replace` (no regex) example
-`replace` found substring ("f g") and replaces it by other substring ("12 345")
+`replace` found substring ("f g") and replaces it by other substrings ("12 345")
 `replace_all` replace all occurrences. 
 ```
   string = "asdf ghjkl asdf ghjkl"
@@ -170,7 +170,7 @@ type(re_posix) function re_posix_init(patt,opt) result(re)
     character(len=*),intent(in),optional :: opt
 end function
 ```
-where `patt` is regex pattern and `opt` are options.
+where `patt` is a regex pattern and `opt` are options.
 Example:
 ```
   type(re_posix) :: re
@@ -182,12 +182,12 @@ return:
  {compiled regex: "[skdj]+", with options: "xn"}
 ```
 ### `match` example
-You have three choices how to match regex pattern in `string`.
-1. Create `re_posix` and call its method `%match` with `string` as argument
+You have three choices on how to match a regex pattern in a `string`.
+1. Create `re_posix` and call its method `%match` with `string` as an argument.
 1. Create `re_posix` and apply to it `match` function with `re_posix` and `string` as arguments
-1. use `match` function with this arguments: `string`, `pattern` and regex options
+1. Use `match` function with these arguments: `string`, `pattern` and regex options
 
-All of them retune `re_match` type. If no macht the variables of `re_match` type have 
+All of them retune a `re_match` type variable. If no macht then the variables of `re_match` type have 
 values: `m_string = ""`, `start_pos = -1`, `end_pos = -1` and `length = 0`.
 
 ```
@@ -218,9 +218,9 @@ return:
 ```
 ### `match_group` example
 Group(1) is equal to full match. Each other group is match of one of any pattern between brackets `(..)`.
-In example is group(1) match of the pattern: `([a-zA-Z]+)@([a-zA-Z]+).([a-zA-Z]+)`; 
-group(2) match of the pattern :`[a-zA-Z]+`; group(3) match of the pattern :`(([a-zA-Z]+).([a-zA-Z]+))`; 
-group(4) and group(5) are matches of the pattern: `[a-zA-Z]+` (subpatterns of previous pattern).
+In example is group(1) the match of the pattern: `([a-zA-Z]+)@([a-zA-Z]+).([a-zA-Z]+)`; 
+group(2) the match of the pattern :`[a-zA-Z]+`; group(3) the match of the pattern :`(([a-zA-Z]+).([a-zA-Z]+))`; 
+group(4) and group(5) are the matches of the pattern: `[a-zA-Z]+` (subpatterns of the previous pattern).
 ```
   type(re_match) :: match_scalar
   
@@ -247,9 +247,8 @@ return:
  group: 7 {(0,-1) 0 - ""}
 ```
 ### `match_N` example
-`match_N` is same as `match` but returns array of `re_match` types with size `N`.
-And it need argument `N`
-If 
+`match_N` is the same as the `match` but returns an array of `re_match` types with size `N`.
+It needs argument `N`.
 ```
   type(re_match),allocatable :: match_array(:)
   type(re_posix) :: re
@@ -274,8 +273,8 @@ return:
  {(2,3) 2 - "sd"} {(5,6) 2 - "jk"} {(4,5) 2 - "sd"} {(5,6) 2 - "jk"} {(-1,-1) 0 - ""}
 ```
 ### `match_all` example
-`match_all` is same as `match` but returns array of `re_match` types contains 
-all matches of pattern in `string`.
+`match_all` is same as the `match`, but returns an array of `re_match` types. It contains 
+all matches of the pattern in a `string`.
 ```
   type(re_match),allocatable :: match_array(:)
   type(re_posix) :: re
@@ -301,10 +300,10 @@ return:
 
 ```
 ### `re_replace` example
-You have three choices how to replace regex pattern in `string`.
+You have three choices on how to replace the regex pattern in a `string`.
 1. Create `re_posix` and call its method `%replace` with `string` and substring as arguments
 1. Create `re_posix` and apply to it `re_replace` function with `re_posix`, `string` and substring as arguments
-1. use `re_replace` function with this arguments: `string`, `pattern`, substring and regex options
+1. use `re_replace` function with these arguments: `string`, `pattern`, substring and regex options
 ```
   type(re_posix) :: re
   
@@ -322,7 +321,7 @@ return:
  a<......>f ghjkkkkl asddddf ghjjjjkl
 ```
 ### `re_replace_all` example
-`replace_all` is same as `re_replace` but replaces all matches of pattern.
+`replace_all` is same as `re_replace` but replaces all matches of the pattern.
 ```
   type(re_posix) :: re
   
@@ -340,7 +339,7 @@ return:
  a<......>f gh<......>l a<......>f gh<......>l
 ```
 ### `operator (==)` example
-You can copare `re_posix` and `re_match`.
+You can compare `re_posix` and `re_match`.
 `re_posix` are equal if its `%compiled`, `%c_comp_opt`, `%c_exec_opt` and `%patt` variables are equal.
 `re_match` are equal if its `%m_string`, `%start_pos`, `%end_pos` and `%length` variables are equal.
 ```
@@ -371,7 +370,7 @@ return:
  F
 ```
 ### `assignment (=)` example
-There is overloaded operator for character.
+There is the overloaded operator for character variable.
 _Note: I'm not sure it is useful._
 ```
   character(len=:),allocatable :: my_match
